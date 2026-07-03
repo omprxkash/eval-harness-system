@@ -1,0 +1,7 @@
+Hi {{ author }},
+
+Thank you for sharing your thoughts on {{ brand_name }}. We really appreciate you taking the time — every piece of feedback helps us improve.
+
+{% if topics %}We noted your comments around {{ topics | join(', ') | replace('_', ' ') }}. {% endif %}If there's anything we can do better, please don't hesitate to reach out. We're always listening.
+
+The {{ brand_name }} Team

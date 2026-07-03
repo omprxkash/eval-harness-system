@@ -1,0 +1,9 @@
+Hi {{ author }},
+
+We're really sorry to hear your experience didn't live up to what you were expecting. That's not the standard we hold ourselves to, and we want to make it right.
+
+{% if topics %}It sounds like the {% for t in topics %}{{ t | replace('_', ' ') }}{% if not loop.last %}, {% endif %}{% endfor %} side of things let you down — and we take that seriously. {% endif %}Someone from our support team will be reaching out shortly to look into this for you.
+
+Thank you for taking the time to share your feedback. It helps us get better.
+
+The {{ brand_name }} Team
