@@ -40,3 +40,23 @@ def client(db):
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def positive_review_data():
+    return {
+        "body": "Excellent product, very happy with the quality and fast delivery!",
+        "rating": 5,
+        "author": "Test User",
+        "title": "Great product",
+    }
+
+
+@pytest.fixture
+def negative_review_data():
+    return {
+        "body": "Terrible experience. Broken on arrival. Want a refund immediately.",
+        "rating": 1,
+        "author": "Unhappy Customer",
+        "title": "Awful",
+    }

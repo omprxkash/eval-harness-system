@@ -30,6 +30,8 @@ class EvalResult(Base):
     passed = Column(Boolean, nullable=False)
     failure_type = Column(String(50), nullable=True)
     correction = Column(JSON, nullable=True)
+    geval_scores = Column(JSON, nullable=True)
+    geval_weighted = Column(Float, nullable=True)
     evaluated_at = Column(DateTime, server_default=func.now())
 
     run = relationship("EvalRun", back_populates="result")

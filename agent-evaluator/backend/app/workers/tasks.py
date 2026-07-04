@@ -9,6 +9,7 @@ def run_evaluation(run_id: int):
     from app.eval.step_evaluator import evaluate_steps
     from app.eval.failure_classifier import classify_failure
     from app.eval.correction_generator import generate_correction
+    from app.eval.geval_evaluator import evaluate_with_geval
 
     db = SessionLocal()
     try:
@@ -18,11 +19,20 @@ def run_evaluation(run_id: int):
 
         output_scores = evaluate_output(run.goal, run.final_output, run.trace)
         step_scores = evaluate_steps(run.trace)
+        geval = evaluate_with_geval(run.goal, run.final_output, run.trace)
 
         overall = round(
             output_scores["task_completion_score"] * 0.6 + step_scores["step_accuracy_score"] * 0.4,
             4,
         )
+        # If geval ran successfully, blend it into overall
+        if geval.get("geval_weighted", 0) > 0:
+            overall = round(
+                output_scores["task_completion_score"] * 0.4
+                + step_scores["step_accuracy_score"] * 0.3
+                + geval["geval_weighted"] * 0.3,
+                4,
+            )
         passed = overall >= 0.7
 
         all_scores = {**output_scores, **step_scores, "overall_score": overall}
@@ -38,6 +48,8 @@ def run_evaluation(run_id: int):
             passed=passed,
             failure_type=failure_type,
             correction=correction,
+            geval_scores=geval["geval_scores"],
+            geval_weighted=geval["geval_weighted"],
         )
         db.add(result)
         run.status = "complete"
