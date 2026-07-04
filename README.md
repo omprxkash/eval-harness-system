@@ -1,3 +1,5 @@
+> For system architecture and how both projects connect — [ARCHITECTURE.md](ARCHITECTURE.md)
+
 # eval-harness-system
 
 Production-grade evaluation and quality assurance infrastructure for LLM-powered systems.
