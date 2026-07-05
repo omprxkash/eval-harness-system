@@ -60,6 +60,27 @@ This project exists as a deliberate contrast to `agent-evaluator`. It shows the 
 
 ---
 
+## Evaluation fundamentals
+
+Every eval system — including `agent-evaluator/` — is built from three components:
+
+**Test cases** — input/expected pairs that define correct behaviour. Each specifies which checks to run.
+
+**Evaluators** — functions that return `{passed: bool, detail: str}`. Two types:
+
+| Type | When to use | Cost |
+|---|---|---|
+| Rule-based (`file_written`, `min_words`, `must_mention`) | Objective, deterministic checks | Free |
+| LLM-as-judge | Subjective quality, open-ended outputs | ~$0.001/call with Haiku |
+
+Use rule-based checks first. Add LLM judges only where rules can't capture quality — the same principle behind `review-automation/`, which deliberately avoids LLMs to make the cost/quality tradeoff visible.
+
+**Runner** — executes all cases, aggregates scores, writes a report. Score drops between runs signal regressions; score improvements confirm a fix worked.
+
+The self-correcting loop: run evals → feed failures to the LLM → get prompt suggestions → apply → re-run. `agent-evaluator/`'s correction generator automates this final step.
+
+---
+
 ## How eval-harness-system connects to the other repo
 
 Any agent in `autonomous-multimodel-agent` can submit a run trace to `agent-evaluator`:
